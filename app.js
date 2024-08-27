@@ -19,6 +19,29 @@ let { socketInit, gui, leaderboard, minimap, moveCompensation, lag, getNow } = s
 //         document.getElementById("patchNotes").innerHTML += `<div><b>${changelog[0][0].slice(1).trim()}</b>: ${changelog[0].slice(1).join(":") || "Update lol"}<ul>${changelog.slice(1).map((line) => `<li>${line.slice(1).trim()}</li>`).join("")}</ul><hr></div>`;
 //     }
 // });
+document.addEventListener("DOMContentLoaded", function() {
+    // The server list
+    const servers = ['Server 1', 'Server 2'];
+
+    // Get the serverSelector table
+    const serverSelector = document.getElementById('serverSelector');
+
+    // Populate the table with servers
+    servers.forEach(function(server, index) {
+        const row = serverSelector.insertRow(); // Create a new row
+        const cell = row.insertCell(); // Create a new cell in the row
+        cell.innerText = server; // Set the text for the cell
+        cell.style.padding = '0px';
+        cell.style.border = '1px solid #ccc';
+        cell.style.cursor = 'pointer';
+
+        // Add click event to each cell
+        cell.addEventListener('click', function() {
+            console.log('Selected:', server);
+            document.getElementById('selectedServer').innerText = server;
+        });
+    });
+});
 
 fetch("changelog.html", { cache: "no-cache" })
     .then(async ChangelogsHTMLFile => {

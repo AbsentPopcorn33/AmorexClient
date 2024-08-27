@@ -19,30 +19,6 @@ let { socketInit, gui, leaderboard, minimap, moveCompensation, lag, getNow } = s
 //         document.getElementById("patchNotes").innerHTML += `<div><b>${changelog[0][0].slice(1).trim()}</b>: ${changelog[0].slice(1).join(":") || "Update lol"}<ul>${changelog.slice(1).map((line) => `<li>${line.slice(1).trim()}</li>`).join("")}</ul><hr></div>`;
 //     }
 // });
-document.addEventListener("DOMContentLoaded", function() {
-    // The server list
-    const servers = ['Server 1', 'Server 2'];
-
-    // Get the serverSelector table
-    const serverSelector = document.getElementById('serverSelector');
-
-    // Populate the table with servers
-    servers.forEach(function(server, index) {
-        const row = serverSelector.insertRow(); // Create a new row
-        const cell = row.insertCell(); // Create a new cell in the row
-        cell.innerText = server; // Set the text for the cell
-        cell.style.padding = '0px';
-        cell.style.border = '1px solid #ccc';
-        cell.style.cursor = 'pointer';
-
-        // Add click event to each cell
-        cell.addEventListener('click', function() {
-            console.log('Selected:', server);
-            document.getElementById('selectedServer').innerText = server;
-        });
-    });
-});
-
 fetch("changelog.html", { cache: "no-cache" })
     .then(async ChangelogsHTMLFile => {
         let patchNotes = document.querySelector("#patchNotes");
@@ -229,51 +205,79 @@ function getElements(kb, storeInDefault) {
     }
 }
 window.onload = async () => {
-    window.serverAdd = 'amorex-ser-ft-aqocnoajxo.glitch.me';
-    if (Array.isArray(window.serverAdd)) {
-        window.isMultiserver = true;
-        const servers = window.serverAdd;
-        let serverSelector = document.getElementById("serverSelector"),
-            tbody = document.createElement("tbody");
-        serverSelector.style.display = "block";
-        document.getElementById("startMenuSlidingContent").removeChild(document.getElementById("serverName"));
-        serverSelector.classList.add("serverSelector");
-        serverSelector.classList.add("shadowscroll");
-        serverSelector.appendChild(tbody);
-        let myServer = {
+    let servers = await (await fetch("https://amorex-ser-ft-aqocnoajxo.glitch.me/browserData.json")).json(),
+        serverSelector = document.getElementById("serverSelector"),
+        tbody = document.createElement("tbody"),
+        myServer = {
             classList: {
                 contains: () => false,
             },
-        };
-        for (let server of servers) {
-            try {
-                const tr = document.createElement("tr");
-                const td = document.createElement("td");
-                td.textContent = `${server.gameMode} | ${server.players} Players`;
-                td.onclick = () => {
-                    if (myServer.classList.contains("selected")) {
-                        myServer.classList.remove("selected");
-                    }
-                    tr.classList.add("selected");
-                    myServer = tr;
-                    window.serverAdd = server.ip;
-                    getMockups();
-                };
-                tr.appendChild(td);
-                tbody.appendChild(tr);
+        },
+        ping = 0;
+
+    serverSelector.style.display = "block";
+    document.getElementById("serverName").remove();
+    serverSelector.classList.add("serverSelector");
+    serverSelector.classList.add("shadowscroll");
+    serverSelector.appendChild(tbody);
+
+    for (let server of servers) {
+        let protocol = server[2] ? "https:" : "http:",
+            location = server[1],
+            ip = server[0],
+            minPing,
+            time;
+
+        if (Array.isArray(server)) {
+            if (!server.length) continue;
+            time = Date.now();
+            server = await (await fetch(`wss://amorex-ser-ft-aqocnoajxo.glitch.me/serverData.json`)).json();
+            minPing = Date.now() - time;
+        } else {
+            console.log(server);
+            throw new Error("Invalid server browser data");
+        }
+        if (typeof server != "object") {
+            console.log(server);
+            throw new Error("Invalid server data");
+        }
+        try {
+            let tdPlayers = document.createElement("td"),
+                tdMode = document.createElement("td"),
+                tdIp = document.createElement("td"),
+                tr = document.createElement("tr");
+
+            tdPlayers.textContent = `${server.players} Players`;
+            tdPlayers.classList.add("tdLeft");
+            tdMode.textContent = server.gameMode;
+            tdMode.classList.add("tdCenter");
+            tdIp.textContent = location == "" ? ip : location;
+            tdIp.classList.add("tdLeft");
+            tr.appendChild(tdIp);
+            tr.appendChild(tdMode);
+            tr.appendChild(tdPlayers);
+            tr.onclick = () => {
+                if (myServer.classList.contains("selected")) {
+                    myServer.classList.remove("selected");
+                }
+                tr.classList.add("selected");
                 myServer = tr;
-            } catch (e) {
-                console.log(e);
+                window.connectionAdd = protocol;
+                window.serverAdd = ip;
+                getMockups();
+            };
+            tbody.appendChild(tr);
+            if (!ping || ping > minPing) {
+                ping = minPing;
+                myServer = tr;
+                serverSelector.scrollTop = tr.offsetTop;
             }
+        } catch (e) {
+            console.log(e);
         }
-        if (Array.from(myServer.children)[0].onclick) {
-            Array.from(myServer.children)[0].onclick();
-        }
-    } else {
-        getMockups();
-        util.pullJSON("gamemodeData").then((json) => {
-            document.getElementById("serverName").innerHTML = `<h4 class="nopadding">${json.gameMode} | ${json.players} Players</h4>`;
-        });
+    }
+    if (myServer.onclick) {
+        myServer.onclick();
     }
     // Save forms
     util.retrieveFromLocalStorage("playerNameInput");

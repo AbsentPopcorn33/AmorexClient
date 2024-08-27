@@ -33,7 +33,13 @@
                         <div class="slider" id="startMenuSlidingContent">
                             <center><img width=112 height=112 src="https://cdn.glitch.global/da897f11-c99e-458d-8a99-2fb876c3add1/Notwzshape.png?v=1724007414799" /></center>
                             <h1 id="gameName"><img width=256 height=72 src="https://cdn.glitch.global/da897f11-c99e-458d-8a99-2fb876c3add1/1723959928986.png?v=1723959957455"/><h1>
-                            <div id="serverName"><h4 class="nopadding">Connecting to server...</h4></div>
+                            <div id="server" style="width: 200px; border: 1px solid #ccc; padding: 10px; position: relative;">
+                            <h4 class="nopadding" id="selectedServer">Connecting to server...</h4>
+                            <div id="serverScroll" style="height: 100px; overflow-y: scroll; position: absolute; top: 40px; left: 0; right: 0; z-index: 10; background-color: white; display: none;">
+                            <div class="serverOption" data-server="server1">Server 1</div>
+                            <div class="serverOption" data-server="server2">Server 2</div>->
+                           </div>
+                           </div>
                             <table id="serverSelector" style="display:none;"></table>
                             <input type="text" autofocus tabindex="1" spellcheck="false" placeholder="This is the adventure of (your name)" id="playerNameInput" maxlength="32" />
                             <input type="text" class="conceal" tabindex="3" placeholder="Redeem Code" id="playerKeyInput" maxlength="64" />

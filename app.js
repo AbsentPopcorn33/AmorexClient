@@ -247,7 +247,7 @@ window.onload = async () => {
                 tdIp = document.createElement("td"),
                 tr = document.createElement("tr");
 
-            tdPlayers.textContent = `${server.players} Players`;
+            tdPlayers.textContent = `${server[3]} Players`;
             tdPlayers.classList.add("tdLeft");
             tdMode.textContent = server.gameMode;
             tdMode.classList.add("tdCenter");

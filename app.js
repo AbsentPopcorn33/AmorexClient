@@ -8,7 +8,7 @@ import { color } from "./lib/color.js";
 import { gameDraw } from "./lib/gameDraw.js";
 import * as socketStuff from "./lib/socketInit.js";
 (async function (util, global, settings, Canvas, color, gameDraw, socketStuff) {
- let ServerList = [
+/*let ServerList = [
     [
         "amorex-ser-ft-aqocnoajxo.glitch.me",
         "DEV",
@@ -39,7 +39,7 @@ import * as socketStuff from "./lib/socketInit.js";
       true,
       0
     ]
-]
+]*/
 let { socketInit, gui, leaderboard, minimap, moveCompensation, lag, getNow } = socketStuff;
 // fetch("changelog.md", { cache: "no-cache" })
 // .then((response) => response.text())
@@ -237,7 +237,7 @@ function getElements(kb, storeInDefault) {
     }
 }
 window.onload = async () => {
-    window.serverAdd = ServerList//(await (await fetch("https://amorex-ser-ft-aqocnoajxo.glitch.me/browserData.json")).json());
+    window.serverAdd = (await (await fetch("https://amorex-ser-ft-aqocnoajxo.glitch.me/browserData.json")).json());
     if (Array.isArray(window.serverAdd)) {
         window.isMultiserver = true;
         const servers = window.serverAdd;

@@ -229,7 +229,7 @@ window.onload = async () => {
             time;
 
         if (Array.isArray(server)) {
-            if (!!server.length) continue;
+            if (server.length) break;
             time = Date.now();
             throw new Error("Invalid server browser data");
         }

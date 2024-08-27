@@ -16,25 +16,25 @@ let ServerList = [
         0
     ],
     [
-        "amorex-ser-ft-asia.glitch.me",
+        "amorex-ser-ft-asia.glitch.me", // Doesnt Exist
         "ASIA",
         true,
         0
     ],
     [
-        "amorex-ser-ft-europe.glitch.me",
+        "amorex-ser-ft-europe.glitch.me", // Doesnt Exist
         "EUROPE",
         false,
         0
     ],
     [
-        "amorex-ser-ft-oceania.glitch.me",
+        "amorex-ser-ft-oceania.glitch.me", // Doesnt Exist
         "",
         true,
         0
     ],
     [
-      "amorex.glitch.me",
+      "amorex.glitch.me", // Access denied
       "Main",
       true,
       0

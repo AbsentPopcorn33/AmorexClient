@@ -213,7 +213,7 @@ window.onload = async () => {
         let serverSelector = document.getElementById("serverSelector"),
             tbody = document.createElement("tbody");
         serverSelector.style.display = "block";
-        document.getElementById("startMenuSlidingContent").removeChild(document.getElementById("serverName"));
+        //document.getElementById("startMenuSlidingContent").removeChild(document.getElementById("serverName"));
         serverSelector.classList.add("serverSelector");
         serverSelector.classList.add("shadowscroll");
         serverSelector.appendChild(tbody);
@@ -226,11 +226,12 @@ window.onload = async () => {
           let protocol = serverArray[2] ? "https:" : "http:",
             location = serverArray[1],
             ip = serverArray[0];
-          let server = await (await fetch(`${protocol}//${ip}/lib/json/gamemodeData.json`)).json()
+          let server = await (await fetch(`${protocol}//${ip}/lib/json/gamemodeData.json`).catch(e => {Error(e); return {json: () => {return false}}})).json()
+            if(server !== false)
             try {
                 const tr = document.createElement("tr");
                 const td = document.createElement("td");
-                td.textContent = `${server.gameMode} | ${server.players} Players`;
+                td.textContent = `${location} > ${server.gameMode} | ${server.players} Players`;
                 td.onclick = () => {
                     if (myServer.classList.contains("selected")) {
                         myServer.classList.remove("selected");

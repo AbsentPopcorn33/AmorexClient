@@ -231,10 +231,6 @@ window.onload = async () => {
         if (Array.isArray(server)) {
             if (!server.length) continue;
             time = Date.now();
-            server = await (await fetch(`https://amorex-ser-ft-aqocnoajxo.glitch.me/serverData.json`)).json();
-            minPing = Date.now() - time;
-        } else {
-            console.log(server);
             throw new Error("Invalid server browser data");
         }
         if (typeof server != "object") {
@@ -279,6 +275,7 @@ window.onload = async () => {
     if (myServer.onclick) {
         myServer.onclick();
     }
+
     // Save forms
     util.retrieveFromLocalStorage("playerNameInput");
     util.retrieveFromLocalStorage("playerKeyInput");

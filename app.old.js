@@ -19,7 +19,6 @@ let { socketInit, gui, leaderboard, minimap, moveCompensation, lag, getNow } = s
 //         document.getElementById("patchNotes").innerHTML += `<div><b>${changelog[0][0].slice(1).trim()}</b>: ${changelog[0].slice(1).join(":") || "Update lol"}<ul>${changelog.slice(1).map((line) => `<li>${line.slice(1).trim()}</li>`).join("")}</ul><hr></div>`;
 //     }
 // });
-
 fetch("changelog.html", { cache: "no-cache" })
     .then(async ChangelogsHTMLFile => {
         let patchNotes = document.querySelector("#patchNotes");
@@ -206,56 +205,77 @@ function getElements(kb, storeInDefault) {
     }
 }
 window.onload = async () => {
-    window.serverAdd = (await (await fetch("https://amorex-ser-ft-aqocnoajxo.glitch.me/browserData.json")).json()).ip;
-    if (Array.isArray(window.serverAdd)) {
-        window.isMultiserver = true;
-        const servers = window.serverAdd;
-        let serverSelector = document.getElementById("serverSelector"),
-            tbody = document.createElement("tbody");
-        serverSelector.style.display = "block";
-        document.getElementById("startMenuSlidingContent").removeChild(document.getElementById("serverName"));
-        serverSelector.classList.add("serverSelector");
-        serverSelector.classList.add("shadowscroll");
-        serverSelector.appendChild(tbody);
-        let myServer = {
+    let servers = await (await fetch("https://amorex-ser-ft-aqocnoajxo.glitch.me/browserData.json")).json(),
+        serverSelector = document.getElementById("serverSelector"),
+        tbody = document.createElement("tbody"),
+        myServer = {
             classList: {
                 contains: () => false,
             },
-        };
-        for (let serverArray of servers) {
-          let protocol = server[2] ? "https:" : "http:",
+        },
+        ping = 0;
+
+    serverSelector.style.display = "block";
+    document.getElementById("serverName").remove();
+    serverSelector.classList.add("serverSelector");
+    serverSelector.classList.add("shadowscroll");
+    serverSelector.appendChild(tbody);
+
+    for (let server of servers) {
+        let protocol = server[2] ? "https:" : "http:",
             location = server[1],
-            ip = server[0];
-          let server = await (await fetch(`${protocol}//${ip}/serverData.json`)).json()
-            try {
-                const tr = document.createElement("tr");
-                const td = document.createElement("td");
-                td.textContent = `${server.gameMode} | ${server.players} Players`;
-                td.onclick = () => {
-                    if (myServer.classList.contains("selected")) {
-                        myServer.classList.remove("selected");
-                    }
-                    tr.classList.add("selected");
-                    myServer = tr;
-                    window.serverAdd = server.ip;
-                    getMockups();
-                };
-                tr.appendChild(td);
-                tbody.appendChild(tr);
+            ip = server[0],
+            minPing,
+            time;
+
+        if (Array.isArray(server)) {
+            if (server.length) break;
+            time = Date.now();
+            throw new Error("Invalid server browser data");
+        }
+        if (typeof server != "object") {
+            console.log(server);
+            throw new Error("Invalid server data");
+        }
+        try {
+            let tdPlayers = document.createElement("td"),
+                tdMode = document.createElement("td"),
+                tdIp = document.createElement("td"),
+                tr = document.createElement("tr");
+
+            tdPlayers.textContent = `${server.players} Players`;
+            tdPlayers.classList.add("tdLeft");
+            tdMode.textContent = server.gameMode;
+            tdMode.classList.add("tdCenter");
+            tdIp.textContent = location == "" ? ip : location;
+            tdIp.classList.add("tdLeft");
+            tr.appendChild(tdIp);
+            tr.appendChild(tdMode);
+            tr.appendChild(tdPlayers);
+            tr.onclick = () => {
+                if (myServer.classList.contains("selected")) {
+                    myServer.classList.remove("selected");
+                }
+                tr.classList.add("selected");
                 myServer = tr;
-            } catch (e) {
-                console.log(e);
+                window.connectionAdd = protocol;
+                window.serverAdd = ip;
+                getMockups();
+            };
+            tbody.appendChild(tr);
+            if (!ping || ping > minPing) {
+                ping = minPing;
+                myServer = tr;
+                serverSelector.scrollTop = tr.offsetTop;
             }
+        } catch (e) {
+            console.log(e);
         }
-        if (Array.from(myServer.children)[0].onclick) {
-            Array.from(myServer.children)[0].onclick();
-        }
-    } else {
-        getMockups();
-        util.pullJSON("gamemodeData").then((json) => {
-            document.getElementById("serverName").innerHTML = `<h4 class="nopadding">${json.gameMode} | ${json.players} Players</h4>`;
-        });
     }
+    if (myServer.onclick) {
+        myServer.onclick();
+    }
+
     // Save forms
     util.retrieveFromLocalStorage("playerNameInput");
     util.retrieveFromLocalStorage("playerKeyInput");
@@ -1139,7 +1159,7 @@ function drawHealth(x, y, instance, ratio, alpha) {
     if (instance.drawsHealth) {
         let health = instance.render.health.get(),
             shield = instance.render.shield.get();
-        if (health < 0.99 || shield < 0.99 && global.GUIStatus.renderhealth) {
+        if (health < 0.98 || shield < 0.98 && global.GUIStatus.renderhealth) {
             let col = settings.graphical.coloredHealthbars ? gameDraw.mixColors(gameDraw.modifyColor(instance.color), color.guiwhite, 0.5) : color.lgreen;
             let yy = y + realSize + 15 * ratio;
             let barWidth = 3 * ratio;
@@ -1534,7 +1554,7 @@ function drawEntities(px, py, ratio) {
                 msgLengthHalf = measureText(text, 15 * ratioForChat) / 2,
                 alpha = Math.max(!global.mobile ? 0 : 1, Math.min(1000, chat.expires - now) / 1000);
 
-            ctx.globalAlpha = 0.5 * alpha;
+            ctx.globalAlpha = 0.4 * alpha;
             drawBar(x - msgLengthHalf, x + msgLengthHalf, y, 30 * ratioForChat, gameDraw.modifyColor(instance.color));
             ctx.globalAlpha = alpha;
             settings.graphical.fontStrokeRatio *= 1.2;
@@ -1630,7 +1650,7 @@ function drawUpgradeTree(spacing, alcoveSize) {
     let w = measureText(text, 18);
     ctx.globalAlpha = 1;
     ctx.lineWidth = 1;
-    ctx.fillStyle = color.dgrey;
+    ctx.fillStyle = color.white;
     ctx.strokeStyle = color.black;
     ctx.fillText(text, global.screenWidth / 2 - w / 2, innerHeight * 0.04);
     ctx.strokeText(text, global.screenWidth / 2 - w / 2, innerHeight * 0.04);
@@ -2345,7 +2365,7 @@ let getKills = () => {
     let finalKills = {
         " kills": [Math.round(global.finalKills[0].get()), 1],
         " assists": [Math.round(global.finalKills[1].get()), 0.5],
-        " visitors defeated": [Math.round(global.finalKills[2].get()), 3],
+        " bosses defeated": [Math.round(global.finalKills[2].get()), 3],
         " polygons destroyed": [Math.round(global.finalKills[3].get()), 0.05],
     }, killCountTexts = [];
     let destruction = 0;

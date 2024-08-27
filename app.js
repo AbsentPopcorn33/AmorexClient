@@ -206,7 +206,7 @@ function getElements(kb, storeInDefault) {
     }
 }
 window.onload = async () => {
-    window.serverAdd = (await (await fetch("https://amorex-ser-ft-aqocnoajxo.glitch.me/browserData.json")).json()).ip;
+    window.serverAdd = (await (await fetch("https://amorex-ser-ft-aqocnoajxo.glitch.me/browserData.json")).json());
     if (Array.isArray(window.serverAdd)) {
         window.isMultiserver = true;
         const servers = window.serverAdd;
@@ -223,10 +223,10 @@ window.onload = async () => {
             },
         };
         for (let serverArray of servers) {
-          let protocol = server[2] ? "https:" : "http:",
-            location = server[1],
-            ip = server[0];
-          let server = await (await fetch(`${protocol}//${ip}/serverData.json`)).json()
+          let protocol = serverArray[2] ? "https:" : "http:",
+            location = serverArray[1],
+            ip = serverArray[0];
+          let server = await (await fetch(`${protocol}//${ip}/lib/json/gamemodeData.json`)).json()
             try {
                 const tr = document.createElement("tr");
                 const td = document.createElement("td");
@@ -237,7 +237,7 @@ window.onload = async () => {
                     }
                     tr.classList.add("selected");
                     myServer = tr;
-                    window.serverAdd = server.ip;
+                    window.serverAdd = ip;
                     getMockups();
                 };
                 tr.appendChild(td);

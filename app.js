@@ -231,7 +231,7 @@ window.onload = async () => {
         if (Array.isArray(server)) {
             if (!server.length) continue;
             time = Date.now();
-            server = await (await fetch(`wss://amorex-ser-ft-aqocnoajxo.glitch.me/serverData.json`)).json();
+            server = await (await fetch(`https://amorex-ser-ft-aqocnoajxo.glitch.me/serverData.json`)).json();
             minPing = Date.now() - time;
         } else {
             console.log(server);

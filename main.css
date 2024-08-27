@@ -758,6 +758,39 @@ td b {
     vertical-align: bottom;
 }
 
+td.editing b {
+    background: #fff;
+    color: #333;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    padding: 1px 4px;
+    margin: -2px -7px -2px -3px;
+    text-align: center;
+    cursor: text;
+    -webkit-user-select: auto;
+    -moz-user-select: auto;
+    -ms-user-select: auto;
+    user-select: auto;
+}
+td.editing span {
+    visibility: hidden;
+}
+td b {
+    display: inline-block;
+    width: 12px;
+    height: 17px;
+    cursor: pointer;
+    text-align: right;
+    vertical-align: bottom;
+}
+
+.tdLeft {
+    width: 25%;
+}
+.tdCenter {
+    width: 350px;
+}
+
 *:focus {
     outline: 1px solid transparent;
     border-style: none;

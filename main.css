@@ -195,17 +195,18 @@ div.optionsHeader {
     text-align: center;
 }
 .serverSelector {
+    display: grid;
+    justify-content: center;
     height: 25px;
     text-align: center;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
-    line-height: 13px;
-    padding-left: 10px;
+    line-height: 12px;
+    /* padding-left: 10px; */
     overflow-y: scroll;
     scroll-behavior: smooth;
     scrollbar-width: thin;
     scrollbar-color: oklch(0% 0 0 / 30%) oklch(0% 0 0 / 15%);
-    
 }
 
 .serverSelector tr {

@@ -244,9 +244,8 @@ import * as socketStuff from "./lib/socketInit.js";
     }
   }
   window.onload = async () => {
-    window.serverAdd = ServerList; //(await (await fetch("https://amorex-ser-ft-aqocnoajxo.glitch.me/browserData.json")).json());
+    const servers = ServerList; //(await (await fetch("https://amorex-ser-ft-aqocnoajxo.glitch.me/browserData.json")).json());
     window.isMultiserver = true;
-    const servers = window.serverAdd;
     let serverSelector = document.getElementById("serverSelector"),
       tbody = document.createElement("tbody");
     serverSelector.style.display = "block";
@@ -260,35 +259,50 @@ import * as socketStuff from "./lib/socketInit.js";
         contains: () => false,
       },
     };
-    let Fetches = []
+    let Fetches = [];
     for (let serverArray of servers) {
       let protocol = serverArray[2] ? "https:" : "http:",
         location = serverArray[1],
         ip = serverArray[0];
       window.serverAdd = ip;
-      Fetches.push(util.pullJSON("gamemodeData").then((server) => {
-      if (server !== false)
-        try {
-          const tr = document.createElement("tr");
-          const td = document.createElement("td");
-          td.textContent = `${location}  -  ${server.gameMode}  -  ${server.players} Players`;
-          td.onclick = () => {
-            if (myServer.classList.contains("selected")) {
-              myServer.classList.remove("selected");
-            }
-            tr.classList.add("selected");
-            myServer = tr;
-            window.serverAdd = ip;
-            getMockups();
-          };
-          tr.appendChild(td);
-          tbody.appendChild(tr);
-          myServer = tr;
-        } catch (e) {
-          console.log(e);
-        }}).catch(() => {return false}))
+      window.serverAddProtocol = protocol;
+      Fetches.push(
+        new Promise((resolve, reject) => {
+          util
+            .pullJSON("gamemodeData")
+            .then((server) => {
+              resolve([server, ip, location, protocol]);
+            })
+            .catch(() => {
+              resolve(undefined);
+            });
+        })
+      );
     }
-    await Promise.all(Fetches)
+    for (let serverdata of await Promise.all(Fetches)) {
+      if (!serverdata) continue;
+      let [server, ip, location, protocol] = serverdata;
+      try {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.textContent = `${location}  -  ${server.gameMode}  -  ${server.players} Players`;
+        td.onclick = () => {
+          if (myServer.classList.contains("selected")) {
+            myServer.classList.remove("selected");
+          }
+          tr.classList.add("selected");
+          myServer = tr;
+          window.serverAdd = ip;
+          window.serverAddProtocol = protocol
+          getMockups();
+        };
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        myServer = tr;
+      } catch (e) {
+        console.log(e);
+      }
+    }
     if (Array.from(myServer.children)[0].onclick) {
       Array.from(myServer.children)[0].onclick();
     }

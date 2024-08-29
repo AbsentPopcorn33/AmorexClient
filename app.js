@@ -9,32 +9,9 @@ import { gameDraw } from "./lib/gameDraw.js";
 import * as socketStuff from "./lib/socketInit.js";
 (async function (util, global, settings, Canvas, color, gameDraw, socketStuff) {
   let ServerList = [
-    ["amorex-ser-ft-aqocnoajxo.glitch.me", "DEV", true, 0],
-    [
-      "amorex-ser-ft-asia.glitch.me", // Doesnt Exist
-      "ASIA",
-      true,
-      0,
-    ],
-    [
-      "amorex-ser-ft-europe.glitch.me", // Doesnt Exist
-      "EUROPE",
-      false,
-      0,
-    ],
-    [
-      "amorex-ser-ft-oceania.glitch.me", // Doesnt Exist
-      "",
-      true,
-      0,
-    ],
-    [
-      "amorex.glitch.me", // Access denied
-      "Main",
-      true,
-      0,
-    ],
-    ["industrious-stump-waltz.glitch.me", "Test", true, 0],
+    ["amorex-ser-ft-aqocnoajxo.glitch.me", "AmorexMain", true, 0],
+    ["industrious-stump-waltz.glitch.me", "GlitchServer", true, 0],
+    ["absentpopcorn33amorexserver.onrender.com", "AP33Main", true]
   ];
   let { socketInit, gui, leaderboard, minimap, moveCompensation, lag, getNow } =
     socketStuff;

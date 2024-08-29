@@ -225,7 +225,7 @@ import * as socketStuff from "./lib/socketInit.js";
     window.isMultiserver = true;
     let serverSelector = document.getElementById("serverSelector"),
       tbody = document.createElement("tbody");
-    serverSelector.style.display = "block";
+    //serverSelector.style.display = "block";
     //document.getElementById("startMenuSlidingContent").removeChild(document.getElementById("serverName"));
     document.getElementById("serverName").remove();
     serverSelector.classList.add("serverSelector");

@@ -237,8 +237,9 @@ import * as socketStuff from "./lib/socketInit.js";
       },
     };
     let Fetches = [];
-    for (let serverArray of servers) {
-      let protocol = serverArray[2] ? "https:" : "http:",
+    for (let index in servers) {
+      let serverArray = servers[index],
+        protocol = serverArray[2] ? "https:" : "http:",
         location = serverArray[1],
         ip = serverArray[0];
       window.serverAdd = ip;
@@ -248,38 +249,37 @@ import * as socketStuff from "./lib/socketInit.js";
           util
             .pullJSON("gamemodeData")
             .then((server) => {
-              resolve([server, ip, location, protocol]);
+              try {
+                const tr = document.createElement("tr");
+                const td = document.createElement("td");
+                td.textContent = `${location}  -  ${server.gameMode}  -  ${server.players} Players`;
+                td.onclick = () => {
+                  if (myServer.classList.contains("selected")) {
+                    myServer.classList.remove("selected");
+                  }
+                  tr.classList.add("selected");
+                  myServer = tr;
+                  window.serverAdd = ip;
+                  window.serverAddProtocol = protocol;
+                  getMockups();
+                };
+                tr.appendChild(td);
+                tbody.insertBefore(tr, tbody.children[index] || null);
+                //tbody.appendChild(tr);
+                myServer = tr;
+                resolve(true);
+              } catch (e) {
+                console.log(e);
+                reject(false);
+              }
             })
             .catch(() => {
-              resolve(undefined);
+              reject(false);
             });
         })
       );
     }
-    for (let serverdata of await Promise.all(Fetches)) {
-      if (!serverdata) continue;
-      let [server, ip, location, protocol] = serverdata;
-      try {
-        const tr = document.createElement("tr");
-        const td = document.createElement("td");
-        td.textContent = `${location}  -  ${server.gameMode}  -  ${server.players} Players`;
-        td.onclick = () => {
-          if (myServer.classList.contains("selected")) {
-            myServer.classList.remove("selected");
-          }
-          tr.classList.add("selected");
-          myServer = tr;
-          window.serverAdd = ip;
-          window.serverAddProtocol = protocol
-          getMockups();
-        };
-        tr.appendChild(td);
-        tbody.appendChild(tr);
-        myServer = tr;
-      } catch (e) {
-        console.log(e);
-      }
-    }
+    await Promise.any(Fetches);
     if (Array.from(myServer.children)[0].onclick) {
       Array.from(myServer.children)[0].onclick();
     }

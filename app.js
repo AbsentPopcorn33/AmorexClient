@@ -236,12 +236,14 @@ import * as socketStuff from "./lib/socketInit.js";
         contains: () => false,
       },
     };
-    let Fetches = [];
+    let Fetches = [],
+        Loaded = [];
     for (let index in servers) {
       let serverArray = servers[index],
         protocol = serverArray[2] ? "https:" : "http:",
         location = serverArray[1],
         ip = serverArray[0];
+        Loaded.unshift(ip)
       window.serverAdd = ip;
       window.serverAddProtocol = protocol;
       Fetches.push(
@@ -264,9 +266,10 @@ import * as socketStuff from "./lib/socketInit.js";
                   getMockups();
                 };
                 tr.appendChild(td);
-                tbody.insertBefore(tr, tbody.children[index]) || null;
+                tbody.insertBefore(tr, tbody.children[index] || tbody.children[Loaded.indexOf(ip)]) || null;
                 //tbody.appendChild(tr);
-                myServer = tr;
+                   Loaded.shift()
+               myServer = tr;
                 resolve(true);
               } catch (e) {
                 console.log(e);

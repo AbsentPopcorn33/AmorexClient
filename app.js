@@ -264,7 +264,7 @@ import * as socketStuff from "./lib/socketInit.js";
                   getMockups();
                 };
                 tr.appendChild(td);
-                tbody.insertBefore(tr, tbody.children[index] || null);
+                tbody.insertBefore(tr, tbody.children[index]) || null;
                 //tbody.appendChild(tr);
                 myServer = tr;
                 resolve(true);

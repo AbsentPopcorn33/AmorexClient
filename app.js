@@ -10,7 +10,7 @@ import * as socketStuff from "./lib/socketInit.js";
 (async function (util, global, settings, Canvas, color, gameDraw, socketStuff) {
   let ServerList = [
     ["localhost:3000", "Localhost", false, 0],
-    ["absentpopcorn33amorexserver.onrender.com", "testServer", true, 0],
+    ["absentpopcorn33amorexserver.onrender.com", "TestServer", true, 0],
     ["qxrh04oo7bjdebotzrbkzt6iopljp1he.onrender.com", "MainUSA", true, 0],
     ["dzavyrbepkmrxwqgpivsboyuqzrfrzkm.onrender.com", "MainASIA", true, 0],
     ["nhnwjivcgjucswmqm4tfavmxlaeyntaa.onrender.com", "MainEU", true, 0]

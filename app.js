@@ -9,7 +9,11 @@ import { gameDraw } from "./lib/gameDraw.js";
 import * as socketStuff from "./lib/socketInit.js";
 (async function (util, global, settings, Canvas, color, gameDraw, socketStuff) {
   let ServerList = [
-    ["localhost:3000", "LocalHost", false, 0]
+    ["localhost:3000", "Localhost", false, 0],
+    ["absentpopcorn33amorexserver.onrender.com", "testServer", true, 0],
+    ["qxrh04oo7bjdebotzrbkzt6iopljp1he.onrender.com", "MainUSA", true, 0],
+    ["dzavyrbepkmrxwqgpivsboyuqzrfrzkm.onrender.com", "MainASIA", true, 0],
+    ["nhnwjivcgjucswmqm4tfavmxlaeyntaa.onrender.com", "MainEU", true, 0]
   ];
   let { socketInit, gui, leaderboard, minimap, moveCompensation, lag, getNow } =
     socketStuff;
@@ -223,7 +227,7 @@ import * as socketStuff from "./lib/socketInit.js";
     window.isMultiserver = true;
     let serverSelector = document.getElementById("serverSelector"),
       tbody = document.createElement("tbody");
-    //serverSelector.style.display = "block";
+    serverSelector.style.display = "block";
     //document.getElementById("startMenuSlidingContent").removeChild(document.getElementById("serverName"));
     document.getElementById("serverName").remove();
     serverSelector.classList.add("serverSelector");
@@ -234,26 +238,37 @@ import * as socketStuff from "./lib/socketInit.js";
         contains: () => false,
       },
     };
-    let Fetches = [],
-        Loaded = [];
+    let Fetches = [];
     for (let index in servers) {
       let serverArray = servers[index],
         protocol = serverArray[2] ? "https:" : "http:",
         location = serverArray[1],
         ip = serverArray[0];
-        Loaded.unshift(ip)
       window.serverAdd = ip;
       window.serverAddProtocol = protocol;
       Fetches.push(
         new Promise((resolve, reject) => {
+          const tr = document.createElement("tr");
+          tbody.appendChild(tr)
           util
             .pullJSON("gamemodeData")
             .then((server) => {
               try {
-                const tr = document.createElement("tr");
-                const td = document.createElement("td");
-                td.textContent = `${location}  -  ${server.gameMode}  -  ${server.players} Players`;
-                td.onclick = () => {
+                const tdLocation = document.createElement("td");
+                const tdGameMode = document.createElement("td");
+                const tdPlayers = document.createElement("td");
+
+                tdLocation.textContent = location;
+                tdGameMode.textContent = server.gameMode;
+                tdPlayers.textContent = `${server.players}/20`;
+
+                tdGameMode.classList.add("tdCenter");
+
+                tr.appendChild(tdLocation);
+                tr.appendChild(tdGameMode);
+                tr.appendChild(tdPlayers);
+
+                tr.onclick = () => {
                   if (myServer.classList.contains("selected")) {
                     myServer.classList.remove("selected");
                   }
@@ -263,11 +278,9 @@ import * as socketStuff from "./lib/socketInit.js";
                   window.serverAddProtocol = protocol;
                   getMockups();
                 };
-                tr.appendChild(td);
-                tbody.insertBefore(tr, tbody.children[index] || tbody.children[Loaded.indexOf(ip)]) || null;
+                //tbody.insertBefore(tr, tbody.children[Loaded.indexOf(index)]/* || tbody.children[Loaded.indexOf(ip)]*/);
                 //tbody.appendChild(tr);
-                   Loaded.shift()
-               myServer = tr;
+                myServer = tr;
                 resolve(true);
               } catch (e) {
                 console.log(e);
@@ -436,10 +449,10 @@ import * as socketStuff from "./lib/socketInit.js";
       buttonTabs.children[g].addEventListener("click", () => {
         e !== g &&
           (buttonTabs.children[e].classList.remove("active"), // Remove the active class
-          buttonTabs.children[g].classList.add("active"), // Add the clicked active class
-          (tabOptions[e].style.display = "none"), // Dont display the old menu.
-          (tabOptions[g].style.display = "block"), // Display the menu.
-          (e = g));
+            buttonTabs.children[g].classList.add("active"), // Add the clicked active class
+            (tabOptions[e].style.display = "none"), // Dont display the old menu.
+            (tabOptions[g].style.display = "block"), // Display the menu.
+            (e = g));
       });
   }
   function resizeEvent() {
@@ -521,7 +534,7 @@ import * as socketStuff from "./lib/socketInit.js";
     if (
       settings.graphical.screenshotMode &&
       Math.abs(Math.atan2(global.target.y, global.target.x) + Math.PI / 2) <
-        0.035
+      0.035
     )
       global.target.x = 0;
     return global.target;
@@ -584,7 +597,7 @@ import * as socketStuff from "./lib/socketInit.js";
         border,
       };
       return { name, author, content };
-    } catch (e) {}
+    } catch (e) { }
 
     // Decode from JSON
     try {
@@ -624,7 +637,7 @@ import * as socketStuff from "./lib/socketInit.js";
         author: (typeof author === "string" && author) || "",
         content,
       };
-    } catch (e) {}
+    } catch (e) { }
 
     return null;
   }
@@ -638,10 +651,10 @@ import * as socketStuff from "./lib/socketInit.js";
       d.requestFullscreen
         ? d.requestFullscreen()
         : d.msRequestFullscreen
-        ? d.msRequestFullscreen()
-        : d.mozRequestFullScreen
-        ? d.mozRequestFullScreen()
-        : d.webkitRequestFullscreen && d.webkitRequestFullscreen();
+          ? d.msRequestFullscreen()
+          : d.mozRequestFullScreen
+            ? d.mozRequestFullScreen()
+            : d.webkitRequestFullscreen && d.webkitRequestFullscreen();
     }
     // Get options
     util.submitToLocalStorage("optFancy");
@@ -1174,11 +1187,11 @@ import * as socketStuff from "./lib/socketInit.js";
       t.lerpedFacing == undefined
         ? (t.lerpedFacing = t.facing)
         : (t.lerpedFacing = util.lerpAngle(
-            t.lerpedFacing,
-            t.facing,
-            0.1,
-            true
-          ));
+          t.lerpedFacing,
+          t.facing,
+          0.1,
+          true
+        ));
 
       // Break condition
       if (t.layer > 0) {
@@ -1264,10 +1277,10 @@ import * as socketStuff from "./lib/socketInit.js";
       m.glow.color != null
         ? gameDraw.modifyColor(m.glow.color)
         : gameDraw.mixColors(
-            gameDraw.modifyColor(instance.color),
-            render.status.getColor(),
-            render.status.getBlend()
-          );
+          gameDraw.modifyColor(instance.color),
+          render.status.getColor(),
+          render.status.getBlend()
+        );
     if (m.glow.radius && m.glow.radius > 0) {
       context.shadowBlur = m.glow.radius * ((drawSize / m.size) * m.realSize);
       context.shadowOffsetX = 0;
@@ -1345,11 +1358,11 @@ import * as socketStuff from "./lib/socketInit.js";
       t.lerpedFacing == undefined
         ? (t.lerpedFacing = t.facing)
         : (t.lerpedFacing = util.lerpAngle(
-            t.lerpedFacing,
-            t.facing,
-            0.1,
-            true
-          ));
+          t.lerpedFacing,
+          t.facing,
+          0.1,
+          true
+        ));
       let ang = t.direction + t.angle + rot,
         len = t.offset * drawSize,
         facing;
@@ -1403,10 +1416,10 @@ import * as socketStuff from "./lib/socketInit.js";
       if (health < 0.99 || (shield < 0.99 && global.GUIStatus.renderhealth)) {
         let col = settings.graphical.coloredHealthbars
           ? gameDraw.mixColors(
-              gameDraw.modifyColor(instance.color),
-              color.guiwhite,
-              0.5
-            )
+            gameDraw.modifyColor(instance.color),
+            color.guiwhite,
+            0.5
+          )
           : color.lgreen;
         let yy = y + realSize + 15 * ratio;
         let barWidth = 3 * ratio;
@@ -1419,7 +1432,7 @@ import * as socketStuff from "./lib/socketInit.js";
           x + size,
           yy + (barWidth * settings.graphical.seperatedHealthbars) / 2,
           barWidth * (1 + settings.graphical.seperatedHealthbars) +
-            settings.graphical.barChunk,
+          settings.graphical.barChunk,
           color.black
         );
 
@@ -1450,13 +1463,13 @@ import * as socketStuff from "./lib/socketInit.js";
         if (gui.showhealthtext)
           drawText(
             Math.round(instance.healthN) +
-              "/" +
-              Math.round(instance.maxHealthN),
+            "/" +
+            Math.round(instance.maxHealthN),
             x,
             yy +
-              barWidth * 2 +
-              barWidth * settings.graphical.seperatedHealthbars * 2 +
-              10,
+            barWidth * 2 +
+            barWidth * settings.graphical.seperatedHealthbars * 2 +
+            10,
             12 * ratio,
             color.guiwhite,
             "center"
@@ -1508,9 +1521,9 @@ import * as socketStuff from "./lib/socketInit.js";
     hover = false
   ) {
     let picture =
-        typeof model == "object"
-          ? model
-          : util.getEntityImageFromMockup(model, gui.color),
+      typeof model == "object"
+        ? model
+        : util.getEntityImageFromMockup(model, gui.color),
       position = picture.position,
       scale = (0.6 * len) / position.axis,
       entityX = x + 0.5 * len,
@@ -1519,8 +1532,8 @@ import * as socketStuff from "./lib/socketInit.js";
 
     // Find x and y shift for the entity image
     let xShift =
-        position.middle.x * Math.cos(angle) -
-        position.middle.y * Math.sin(angle),
+      position.middle.x * Math.cos(angle) -
+      position.middle.y * Math.sin(angle),
       yShift =
         position.middle.x * Math.sin(angle) +
         position.middle.y * Math.cos(angle);
@@ -1810,14 +1823,14 @@ import * as socketStuff from "./lib/socketInit.js";
     for (let i = 0; i < H; i++) {
       //skip if this row is not visible
       let top = Math.max(
-          0,
-          (ratio * i * global.gameHeight) / H - py + global.screenHeight / 2
-        ),
+        0,
+        (ratio * i * global.gameHeight) / H - py + global.screenHeight / 2
+      ),
         bottom = Math.min(
           global.screenHeight,
           (ratio * (i + 1) * global.gameHeight) / H -
-            py +
-            global.screenHeight / 2
+          py +
+          global.screenHeight / 2
         );
       if (top > global.screenHeight || bottom < 0) continue;
 
@@ -1826,14 +1839,14 @@ import * as socketStuff from "./lib/socketInit.js";
       for (let j = 0; j < W; j++) {
         //skip if tile not visible
         let left = Math.max(
-            0,
-            (ratio * j * global.gameWidth) / W - px + global.screenWidth / 2
-          ),
+          0,
+          (ratio * j * global.gameWidth) / W - px + global.screenWidth / 2
+        ),
           right = Math.min(
             global.screenWidth,
             (ratio * (j + 1) * global.gameWidth) / W -
-              px +
-              global.screenWidth / 2
+            px +
+            global.screenWidth / 2
           );
         if (left > global.screenWidth || right < 0) continue;
 
@@ -1911,14 +1924,14 @@ import * as socketStuff from "./lib/socketInit.js";
       );
       instance.render.f =
         instance.id === gui.playerid &&
-        !global.autoSpin &&
-        !global.syncingWithTank &&
-        !instance.twiggle &&
-        !global.died
+          !global.autoSpin &&
+          !global.syncingWithTank &&
+          !instance.twiggle &&
+          !global.died
           ? Math.atan2(
-              global.target.y * global.reverseTank,
-              global.target.x * global.reverseTank
-            )
+            global.target.y * global.reverseTank,
+            global.target.x * global.reverseTank
+          )
           : util.lerpAngle(instance.render.f, instance.facing, 0.15, true);
       let x = ratio * instance.render.x - px,
         y = ratio * instance.render.y - py,
@@ -1955,9 +1968,9 @@ import * as socketStuff from "./lib/socketInit.js";
     //draw health bars above entities
     for (let instance of global.entities) {
       let x =
-          instance.id === gui.playerid
-            ? global.player.screenx
-            : ratio * instance.render.x - px,
+        instance.id === gui.playerid
+          ? global.player.screenx
+          : ratio * instance.render.x - px,
         y =
           instance.id === gui.playerid
             ? global.player.screeny
@@ -2026,7 +2039,7 @@ import * as socketStuff from "./lib/socketInit.js";
     global.scrollY =
     global.fixedScrollX =
     global.fixedScrollY =
-      -1;
+    -1;
   global.scrollVelocityY = global.scrollVelocityX = 0;
   let lastGuiType = null;
   function drawUpgradeTree(spacing, alcoveSize) {
@@ -2042,7 +2055,7 @@ import * as socketStuff from "./lib/socketInit.js";
         rootName = m.rerootUpgradeTree, // The upgrade tree root of the player's tank
         rootIndex = [];
       for (let name of rootName) {
-		  console.log(name);
+        console.log(name);
         let ind =
           name == undefined
             ? -1
@@ -2088,28 +2101,28 @@ import * as socketStuff from "./lib/socketInit.js";
 
     for (let [start, end] of branches) {
       let sx =
-          ((start.x - global.scrollX) * (tileSize + spaceBetween) +
-            1 +
-            0.5 * size) *
-            global.treeScale +
-          global.screenWidth / 2,
+        ((start.x - global.scrollX) * (tileSize + spaceBetween) +
+          1 +
+          0.5 * size) *
+        global.treeScale +
+        global.screenWidth / 2,
         sy =
           ((start.y - global.scrollY) * (tileSize + spaceBetween) +
             1 +
             0.5 * size) *
-            global.treeScale +
+          global.treeScale +
           global.screenHeight / 2,
         ex =
           ((end.x - global.scrollX) * (tileSize + spaceBetween) +
             1 +
             0.5 * size) *
-            global.treeScale +
+          global.treeScale +
           global.screenWidth / 2,
         ey =
           ((end.y - global.scrollY) * (tileSize + spaceBetween) +
             1 +
             0.5 * size) *
-            global.treeScale +
+          global.treeScale +
           global.screenHeight / 2;
       if (
         ex < 0 ||
@@ -2131,8 +2144,8 @@ import * as socketStuff from "./lib/socketInit.js";
     let angle = -Math.PI / 4;
     for (let { x, y, colorIndex, index } of tiles) {
       let ax =
-          (x - global.scrollX) * (tileSize + spaceBetween) * global.treeScale +
-          global.screenWidth / 2,
+        (x - global.scrollX) * (tileSize + spaceBetween) * global.treeScale +
+        global.screenWidth / 2,
         ay =
           (y - global.scrollY) * (tileSize + spaceBetween) * global.treeScale +
           global.screenHeight / 2;
@@ -2239,10 +2252,10 @@ import * as socketStuff from "./lib/socketInit.js";
     if (global.mobile) return drawMobileSkillUpgrades(spacing, alcoveSize);
     statMenu.set(
       0 +
-        (global.died ||
-          global.statHover ||
-          (global.canSkill &&
-            !gui.skills.every((skill) => skill.cap === skill.amount)))
+      (global.died ||
+        global.statHover ||
+        (global.canSkill &&
+          !gui.skills.every((skill) => skill.cap === skill.amount)))
     );
     global.clickables.stat.hide();
     let vspacing = 4;
@@ -2253,15 +2266,15 @@ import * as socketStuff from "./lib/socketInit.js";
     let x =
       spacing +
       (statMenu.get() - 1) *
-        (height +
-          50 +
-          len *
-            ska(
-              gui.skills.reduce(
-                (largest, skill) => Math.max(largest, skill.cap),
-                0
-              )
-            ));
+      (height +
+        50 +
+        len *
+        ska(
+          gui.skills.reduce(
+            (largest, skill) => Math.max(largest, skill.cap),
+            0
+          )
+        ));
     let y = global.screenHeight - spacing - height;
     let ticker = 11;
     let namedata = gui.getStatNames(
@@ -2341,8 +2354,8 @@ import * as socketStuff from "./lib/socketInit.js";
         level == maxLevel
           ? col
           : !gui.points || (cap !== maxLevel && level == cap)
-          ? color.grey
-          : color.guiwhite;
+            ? color.grey
+            : color.guiwhite;
       drawText(
         name,
         Math.round(x + len / 2) + 0.5,
@@ -2441,9 +2454,9 @@ import * as socketStuff from "./lib/socketInit.js";
             name.length === 1
               ? [name[0], null]
               : [
-                  name.slice(0, halfNameLength).join(" "),
-                  name.slice(halfNameLength).join(" "),
-                ];
+                name.slice(0, halfNameLength).join(" "),
+                name.slice(halfNameLength).join(" "),
+              ];
 
         ctx.globalAlpha = 0.8;
         ctx.fillStyle = skillColor;
@@ -2652,9 +2665,9 @@ import * as socketStuff from "./lib/socketInit.js";
     if (global.mobile) {
       y += global.canUpgrade
         ? ((alcoveSize / 1.5) * mobileUpgradeGlide.get() * upgradeColumns) /
-            1.5 +
-          spacing * (upgradeColumns + 1.55) +
-          9
+        1.5 +
+        spacing * (upgradeColumns + 1.55) +
+        9
         : 0;
       y +=
         global.canSkill || global.showSkill
@@ -2761,10 +2774,10 @@ import * as socketStuff from "./lib/socketInit.js";
       drawText("Amorex", x + len, y - 50 - 5 * 14 - 2, 15, "#8c40ff", "right");
       drawText(
         "Prediction: " +
-          Math.round(GRAPHDATA) +
-          "ms : " +
-          global.mspt +
-          " mspt",
+        Math.round(GRAPHDATA) +
+        "ms : " +
+        global.mspt +
+        " mspt",
         x + len,
         y - 50 - 4 * 14,
         10,
@@ -2774,10 +2787,10 @@ import * as socketStuff from "./lib/socketInit.js";
       // drawText(`Bandwidth: ${gui.bandwidth.in} in, ${gui.bandwidth.out} out`, x + len, y - 50 - 3 * 14, 10, color.guiwhite, "right");
       drawText(
         "Memory: " +
-          global.metrics.rendergap.toFixed(1) +
-          " Mib : " +
-          "Class: " +
-          gui.class,
+        global.metrics.rendergap.toFixed(1) +
+        " Mib : " +
+        "Class: " +
+        gui.class,
         x + len,
         y - 50 - 3 * 14,
         10,
@@ -2794,10 +2807,10 @@ import * as socketStuff from "./lib/socketInit.js";
       );
       drawText(
         "Server Speed: " +
-          (100 * gui.fps).toFixed(2) +
-          "% : Client Speed: " +
-          global.metrics.rendertime +
-          " FPS",
+        (100 * gui.fps).toFixed(2) +
+        "% : Client Speed: " +
+        global.metrics.rendertime +
+        " FPS",
         x + len,
         y - 50 - 1 * 14,
         10,
@@ -2816,9 +2829,9 @@ import * as socketStuff from "./lib/socketInit.js";
       drawText("Amorex", x + len, y - 46 - 2 * 14 - 2, 15, "#8c40ff", "right");
       drawText(
         (100 * gui.fps).toFixed(2) +
-          "% : " +
-          global.metrics.rendertime +
-          " FPS",
+        "% : " +
+        global.metrics.rendertime +
+        " FPS",
         x + len,
         y - 44 - 1 * 14,
         10,
@@ -3289,11 +3302,11 @@ import * as socketStuff from "./lib/socketInit.js";
     if (global.mobile) {
       yOffset += global.canUpgrade
         ? ((alcoveSize / 1.5) /*+ spacing * 2*/ *
-            mobileUpgradeGlide.get() *
-            upgradeColumns) /
-            1.5 +
-          spacing * (upgradeColumns + 1.55) +
-          -17.5
+          mobileUpgradeGlide.get() *
+          upgradeColumns) /
+        1.5 +
+        spacing * (upgradeColumns + 1.55) +
+        -17.5
         : 0;
       yOffset +=
         global.canSkill || global.showSkill
@@ -3306,38 +3319,37 @@ import * as socketStuff from "./lib/socketInit.js";
     if (global.mobile) {
       buttons = global.clickables.mobileButtons.active
         ? [
+          [
+            [global.clickables.mobileButtons.active ? "-" : "+"],
             [
-              [global.clickables.mobileButtons.active ? "-" : "+"],
-              [
-                `Alt ${
-                  global.clickables.mobileButtons.altFire
-                    ? "Manual"
-                    : "Disabled"
-                }`,
-                6,
-              ],
-              [
-                `${!document.fullscreenElement ? "Full" : "Exit Full"} Screen`,
-                5,
-              ],
+              `Alt ${global.clickables.mobileButtons.altFire
+                ? "Manual"
+                : "Disabled"
+              }`,
+              6,
             ],
             [
-              ["Autofire", 3],
-              ["Reverse", 2.5],
-              ["Self Destruct", 4.5],
+              `${!document.fullscreenElement ? "Full" : "Exit Full"} Screen`,
+              5,
             ],
-            [
-              ["Autospin", 3],
-              ["Override", 3],
-              ["Level Up", 4],
-            ],
-            [
-              ["Action", 3],
-              ["Special", 3],
-              ["Chat", 4],
-            ],
-            /*[["Class Tree", 3]],*/
-          ]
+          ],
+          [
+            ["Autofire", 3],
+            ["Reverse", 2.5],
+            ["Self Destruct", 4.5],
+          ],
+          [
+            ["Autospin", 3],
+            ["Override", 3],
+            ["Level Up", 4],
+          ],
+          [
+            ["Action", 3],
+            ["Special", 3],
+            ["Chat", 4],
+          ],
+          /*[["Class Tree", 3]],*/
+        ]
         : [[[global.clickables.mobileButtons.active ? "-" : "+"]]];
     }
     if (global.clickables.mobileButtons.altFire)
@@ -3438,11 +3450,11 @@ import * as socketStuff from "./lib/socketInit.js";
   };
   let getKills = () => {
     let finalKills = {
-        " kills": [Math.round(global.finalKills[0].get()), 1],
-        " assists": [Math.round(global.finalKills[1].get()), 0.5],
-        " visitors defeated": [Math.round(global.finalKills[2].get()), 3],
-        " polygons destroyed": [Math.round(global.finalKills[3].get()), 0.05],
-      },
+      " kills": [Math.round(global.finalKills[0].get()), 1],
+      " assists": [Math.round(global.finalKills[1].get()), 0.5],
+      " visitors defeated": [Math.round(global.finalKills[2].get()), 3],
+      " polygons destroyed": [Math.round(global.finalKills[3].get()), 0.05],
+    },
       killCountTexts = [];
     let destruction = 0;
     for (let key in finalKills) {
@@ -3455,34 +3467,34 @@ import * as socketStuff from "./lib/socketInit.js";
       (destruction === 0
         ? "🌼"
         : destruction < 2
-        ? "🤖"
-        : destruction < 4
-        ? "🎯"
-        : destruction < 8
-        ? "💥"
-        : destruction < 15
-        ? "💢"
-        : destruction < 25
-        ? "🔥"
-        : destruction < 50
-        ? "💣"
-        : destruction < 75
-        ? "👺"
-        : destruction < 100
-        ? "💯"
-        : destruction < 200
-        ? "⚡"
-        : destruction < 300
-        ? "🧨"
-        : destruction < 500
-        ? "🗡️"
-        : "👩‍💻") +
+          ? "🤖"
+          : destruction < 4
+            ? "🎯"
+            : destruction < 8
+              ? "💥"
+              : destruction < 15
+                ? "💢"
+                : destruction < 25
+                  ? "🔥"
+                  : destruction < 50
+                    ? "💣"
+                    : destruction < 75
+                      ? "👺"
+                      : destruction < 100
+                        ? "💯"
+                        : destruction < 200
+                          ? "⚡"
+                          : destruction < 300
+                            ? "🧨"
+                            : destruction < 500
+                              ? "🗡️"
+                              : "👩‍💻") +
       " " +
       (!killCountTexts.length
         ? "No Kills.."
         : killCountTexts.length == 1
-        ? killCountTexts.join(" and ")
-        : killCountTexts.slice(0, -1).join(", ") +
+          ? killCountTexts.join(" and ")
+          : killCountTexts.slice(0, -1).join(", ") +
           " and " +
           killCountTexts[killCountTexts.length - 1])
     );
@@ -3569,7 +3581,7 @@ import * as socketStuff from "./lib/socketInit.js";
     );
     drawText(
       "⌚ Survived for " +
-        util.timeForHumans(Math.round(global.finalLifetime.get())),
+      util.timeForHumans(Math.round(global.finalLifetime.get())),
       x - 170,
       y + 55,
       16,
@@ -3582,14 +3594,14 @@ import * as socketStuff from "./lib/socketInit.js";
       global.cannotRespawn
         ? global.respawnTimeout
           ? "(" +
-            global.respawnTimeout +
-            " Secon" +
-            `${global.respawnTimeout <= 1 ? "d" : "ds"} ` +
-            "left to respawn)"
+          global.respawnTimeout +
+          " Secon" +
+          `${global.respawnTimeout <= 1 ? "d" : "ds"} ` +
+          "left to respawn)"
           : "(You cannot respawn)"
         : global.mobile
-        ? "(Tap to respawn)"
-        : "(Press enter to respawn)",
+          ? "(Tap to respawn)"
+          : "(Press enter to respawn)",
       x,
       y + 189,
       16,
@@ -3637,7 +3649,7 @@ import * as socketStuff from "./lib/socketInit.js";
     );
     drawText(
       "Final score: " +
-        util.formatLargeNumber(Math.round(global.finalScore.get())),
+      util.formatLargeNumber(Math.round(global.finalScore.get())),
       x - 170,
       y + 25,
       50,
@@ -3645,7 +3657,7 @@ import * as socketStuff from "./lib/socketInit.js";
     );
     drawText(
       "⌚ Survived for " +
-        util.timeForHumans(Math.round(global.finalLifetime.get())),
+      util.timeForHumans(Math.round(global.finalLifetime.get())),
       x - 170,
       y + 55,
       16,

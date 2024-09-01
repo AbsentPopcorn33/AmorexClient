@@ -8,7 +8,7 @@
 }
 
 #mainBody {
-    background-color: #a3a3a3;
+    background-color: #2d3245;
 }
 
 ::-webkit-scrollbar {
@@ -40,9 +40,9 @@ body {
 body {
     font-family: Ubuntu;
     font-size: 14px;
-    background-image: url('https://cdn.glitch.global/da897f11-c99e-458d-8a99-2fb876c3add1/2024_08_11_0x9_Kleki.png?v=1723506675112');
+    /*background-image: url('https://cdn.glitch.global/da897f11-c99e-458d-8a99-2fb876c3add1/2024_08_11_0x9_Kleki.png?v=1723506675112');*/
     background-repeat: repeat;
-    background-color: gray;
+    background-color: #2d3246;
 }
 
 html,
@@ -61,8 +61,9 @@ canvas {
 
 #gameName {
     padding: 0;
-    margin-top: 0px;
+    margin-top: 40px;
     margin-bottom: 0px;
+    padding-bottom: 0px;
     text-align: center;
     font-size: medium;
     font-weight: bold;
@@ -164,8 +165,8 @@ body.mobile #optMobile, body.mobile #optBorders {
     display: inline-block;
 }
 #playerNameInput {
-    padding: 10px;
-    font-size: large;
+    padding: 4px;
+    font-size: medium;
 }
 #playerKeyInput {
     padding: 2px;
@@ -191,22 +192,24 @@ div.optionsHeader {
     display: block;
     margin: 10px 0 4px;
     font: bold 13px/1 Ubuntu;
-    color: #000000;
+    color: #000001;
     text-align: center;
 }
 .serverSelector {
-    display: grid;
-    justify-content: center;
-    height: 25px;
+    height: 100px;
     text-align: center;
-    font-size: 13px;
+    font-size: 14px;
+    color: #919191;
     font-weight: bold;
-    line-height: 12px;
-    /* padding-left: 10px; */
+    line-height: 10px;
+    padding-left: 0px;
+    margin-top: 20px;
+    margin-bottom: 10px;
     overflow-y: scroll;
     scroll-behavior: smooth;
     scrollbar-width: thin;
     scrollbar-color: oklch(0% 0 0 / 30%) oklch(0% 0 0 / 15%);
+    
 }
 
 .serverSelector tr {
@@ -215,7 +218,9 @@ div.optionsHeader {
 }
 
 .serverSelector tr.selected {
-    color: #1B3353;
+    color: #8547ff;
+    font-size: 14.2px;
+    transition: color 0.5s ease;
     /*color: #8ABC3F;*/
     cursor: default;
 }
@@ -246,7 +251,7 @@ body.mobile #startMenu {
 .startMenuHolder {
     width: 350px;
     height: 380px;
-    padding: 10px;
+    padding: 5px;
     overflow: hidden;
     display: inline-block;
     vertical-align: text-top;
@@ -276,10 +281,10 @@ table {
     transition: top 500ms, opacity 500ms;
 }
 .slided .slider {
-    top: -305px;
+    top: -300px;
 }
 #startMenuSlidingContent {
-    height: 305px;
+    height: 300px;
 }
 body.mobile .desktopControlTab {
     display: none;
@@ -355,7 +360,7 @@ update {
     overflow: hidden auto;
     scrollbar-width: thin;
     scrollbar-color: oklch(0% 0 0 / 30%) oklch(0% 0 0 / 15%);
-    border: solid 4px #000000
+    /*border: solid 4px #000000*/
 }
 
 #patchNotes div {
@@ -363,6 +368,12 @@ update {
         margin: 0;
         font-size: 1.5em;
         font-weight: bold;
+    }
+  
+    > hr {
+      border: none;
+      height: 3px;
+      background-color: gray;
     }
 
     > date {
@@ -407,15 +418,13 @@ select:active {
 }
 .shadowScroll {
     overflow-y: scroll;
-    background:
-        /* Shadow covers */
+    /*background:
         linear-gradient(#dde6eb 30%, rgba(255, 255, 255, 0)),
         linear-gradient(rgba(255, 255, 255, 0), #dde6eb 70%) 0 100%,
-        /* Shadows */
         radial-gradient(farthest-side at 50% 0, rgba(0, 0, 0, .2), rgba(0, 0, 0, 0)),
-        radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, .2), rgba(0, 0, 0, 0)) 0 100%;
+        radial-gradient(farthest-side at 50% 100%, rgba(0, 0, 0, .2), rgba(0, 0, 0, 0)) 0 100%;*/
     background-repeat: no-repeat;
-    background-color: #dde6eb;
+    /*background-color: #dde6eb*/
     background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
     background-attachment: local, local, scroll, scroll;
 }
@@ -863,7 +872,7 @@ i.flag::before {
     display: inline-block;
     width: 9px;
     height: 7px;
-    background-color: #000000;
+    background-color: #000001;
     margin: 0 0 5px 3px;
     transition: margin-bottom 500ms;
 }

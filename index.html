@@ -31,10 +31,15 @@
                 <div class="startMenuHolder">
                     <div class="sliderHolder">
                         <div class="slider" id="startMenuSlidingContent">
-                            <center><img width=112 height=112 src="https://cdn.glitch.global/da897f11-c99e-458d-8a99-2fb876c3add1/Notwzshape.png?v=1724007414799" /></center>
-                            <h1 id="gameName"><img width=256 height=72 src="https://cdn.glitch.global/da897f11-c99e-458d-8a99-2fb876c3add1/1723959928986.png?v=1723959957455"/><h1>
+<center>
+  <div style="display: flex; align-items: center;">
+    <img width="80" height="80" src="https://cdn.glitch.global/da897f11-c99e-458d-8a99-2fb876c3add1/Notwzshape.png?v=1724007414799" style="margin-left:25px;"/>
+    <img width="204.6" height="57.6" src="https://cdn.glitch.global/da897f11-c99e-458d-8a99-2fb876c3add1/1723959928986.png?v=1723959957455" id="gameName" style="margin-left: 10px;" />
+  </div>
+</center>
+
                             <div id="serverName"><h4 class="nopadding">Connecting to server...</h4></div>
-                            <table id="serverSelector"></table>
+                            <table id="serverSelector" style="display:none;"></table>
                             <input type="text" autofocus tabindex="1" spellcheck="false" placeholder="This is the adventure of (your name)" id="playerNameInput" maxlength="32" />
                             <input type="text" class="conceal" tabindex="3" placeholder="Redeem Code" id="playerKeyInput" maxlength="64" />
                         </div>
@@ -101,6 +106,7 @@
                                 <table>
                                     <tr>
                                         <td><div><label class="container"><input id="autoLevelUp" tabindex="-1" class="checkbox" type="checkbox"><span class="checkmark"></span>Auto-Level Up</label></div></td>
+                                        <td><div><label class="container"><input id="disableFlashes" tabindex="-1" class="checkbox" type="checkbox"><span class="checkmark"></span>Disable Damage Flashes</label></div></td>
                                         <td><div><label class="container"><input id="centerTank" tabindex="-1" class="checkbox" type="checkbox"><span class="checkmark"></span>Center Camera</label></div></td>
                                     </tr>
                                 </table>

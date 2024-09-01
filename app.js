@@ -9,9 +9,7 @@ import { gameDraw } from "./lib/gameDraw.js";
 import * as socketStuff from "./lib/socketInit.js";
 (async function (util, global, settings, Canvas, color, gameDraw, socketStuff) {
   let ServerList = [
-    ["amorex-ser-ft-aqocnoajxo.glitch.me", "AmorexMain", true, 0],
-    ["industrious-stump-waltz.glitch.me", "GlitchServer", true, 0],
-    ["absentpopcorn33amorexserver.onrender.com", "AP33Main", true]
+    ["localhost:3000", "LocalHost", false, 0]
   ];
   let { socketInit, gui, leaderboard, minimap, moveCompensation, lag, getNow } =
     socketStuff;
@@ -1391,6 +1389,7 @@ import * as socketStuff from "./lib/socketInit.js";
       //ctx.globalCompositeOperation = "source-over";
     }
   };
+  global.drawEntity = drawEntity;
   function drawHealth(x, y, instance, ratio, alpha) {
     let fade = instance.render.status.getFade();
     ctx.globalAlpha = fade * fade;
@@ -1585,7 +1584,6 @@ import * as socketStuff from "./lib/socketInit.js";
     ctx.lineWidth = 1.5 * lineWidthMult;
     drawGuiRect(x, y, len, height, true); // Border
   }
-
   // Start animation
   window.requestAnimFrame =
     window.requestAnimationFrame ||
@@ -2044,6 +2042,7 @@ import * as socketStuff from "./lib/socketInit.js";
         rootName = m.rerootUpgradeTree, // The upgrade tree root of the player's tank
         rootIndex = [];
       for (let name of rootName) {
+		  console.log(name);
         let ind =
           name == undefined
             ? -1
@@ -3810,5 +3809,5 @@ import * as socketStuff from "./lib/socketInit.js";
       //okay, NOW throw the error!
       throw e;
     }
-  }
+  };
 })(util, global, settings, Canvas, color, gameDraw, socketStuff);
